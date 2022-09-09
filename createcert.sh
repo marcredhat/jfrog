@@ -9,7 +9,7 @@ GOPATH="/root/go/"
 
 #date --set="10 MAR 2021 18:00:00"
 
-sudo dnf -y install git podman httpd httpd-tools make
+sudo dnf -y install git podman httpd httpd-tools make firewalld
 sudo yum module -y install go-toolset
 rpm -qi go-toolset
 set +e
