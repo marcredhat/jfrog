@@ -2,9 +2,9 @@
 set -euxo pipefail
 
 # Set up local registry with long-lived certs with SAN
-# if in gcp instance
 #HOSTNAME=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/hostname" -H "Metadata-Flavor: Google")
-HOSTNAME=marcregistry.local
+HOSTNAME="*.marcregistry.local"
+REGISTRY="test.marcregistry.local"
 GOPATH="/root/go/"
 
 #date --set="10 MAR 2021 18:00:00"
@@ -98,7 +98,7 @@ EOF
 cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
 
 # generate server-key.pem, server.csr, server.pem
-cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server server.json | cfssljson -bare server
+cfssl gencert -hostname="$HOSTNAME" -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server server.json | cfssljson -bare server
 
 # enable schema version 1 images
 cat > registry-config.yml << EOF
@@ -157,4 +157,4 @@ sudo podman run --name test-registry -p 5000:5000 \
 popd
 #rm -rf create-registry-certs
 sleep 5
-curl -u test:test https://"${HOSTNAME}":5000/v2/_catalog
+curl -u test:test https://"${REGISTRY}":5000/v2/_catalog
