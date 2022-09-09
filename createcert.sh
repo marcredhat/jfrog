@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euxo pipefail
 
+
+rm -rf /root/cfssl/create-registry-certs
+
 # Set up local registry with long-lived certs with SAN
 #HOSTNAME=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/hostname" -H "Metadata-Flavor: Google")
 HOSTNAME="*.marcregistry.local"
@@ -126,10 +129,10 @@ compatibility:
 EOF
 
 sudo mkdir -p /opt/registry/{auth,certs,data}
-sudo firewall-cmd --add-port=5000/tcp --zone=internal --permanent
-sudo firewall-cmd --add-port=5000/tcp --zone=public   --permanent
-sudo firewall-cmd --add-service=http  --permanent
-sudo firewall-cmd --reload
+#sudo firewall-cmd --add-port=5000/tcp --zone=internal --permanent
+#sudo firewall-cmd --add-port=5000/tcp --zone=public   --permanent
+#sudo firewall-cmd --add-service=http  --permanent
+#sudo firewall-cmd --reload
 
 CA=$(sudo tail -n +2 ca.pem | head -n-1 | tr -d '\r\n')
 sudo htpasswd -bBc /opt/registry/auth/htpasswd test test
